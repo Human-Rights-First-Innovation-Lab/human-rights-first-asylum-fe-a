@@ -23,7 +23,7 @@ import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
 import SignupPage from './components/pages/Login/SignupPage';
 
-const oktaAuth = new OktaAuth(config);
+// const oktaAuth = new OktaAuth(config);
 
 ReactDOM.render(
   <Router>
@@ -39,9 +39,9 @@ function App() {
   // React Router has a nifty useHistory hook we can use at this level to ensure we have security around our routes.
   const history = useHistory();
 
-  const restoreOriginalUri = async (_oktaAuth, originalUri) => {
-    history.replace(toRelativeUrl(originalUri, window.location.origin));
-  };
+  // const restoreOriginalUri = async (_oktaAuth, originalUri) => {
+  //   history.replace(toRelativeUrl(originalUri, window.location.origin));
+  // };
 
   const authHandler = () => {
     // We pass this to our <Security /> component that wraps our routes.
@@ -50,37 +50,39 @@ function App() {
   };
 
   return (
-    <Security
-      oktaAuth={oktaAuth}
-      restoreOriginalUri={restoreOriginalUri}
-      onAuthRequired={authHandler}
-    >
+    // <Security
+    //   oktaAuth={oktaAuth}
+    //   restoreOriginalUri={restoreOriginalUri}
+    //   onAuthRequired={authHandler}
+    // >
+    <>
       <GlobalStyle />
       <Switch>
         <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage} />
         <Route path="/implicit/callback" component={LoginCallback} />
         {/* any of the routes you need secured should be registered as SecureRoutes */}
-        <SecureRoute
+        <Route
           path="/"
           // exact
           component={() => <HomePage LoadingComponent={LoadingComponent} />}
         />
-        <SecureRoute
+        <Route
           path="/cases"
           // exact
           component={() => <HomePage LoadingComponent={LoadingComponent} />}
         />
-        <SecureRoute
+        <Route
           path="/judges"
           // exact
           component={() => <HomePage LoadingComponent={LoadingComponent} />}
         />
-        <SecureRoute path="/example-list" component={ExampleListPage} />
-        <SecureRoute path="/profile-list" component={ProfileListPage} />
-        <SecureRoute path="/datavis" component={ExampleDataViz} />
+        <Route path="/example-list" component={ExampleListPage} />
+        <Route path="/profile-list" component={ProfileListPage} />
+        <Route path="/datavis" component={ExampleDataViz} />
         <Route component={NotFoundPage} />
       </Switch>
-    </Security>
+    </>
+    // </Security>
   );
 }

@@ -30,45 +30,45 @@ const HRFBlueLoader = withStyles(() => ({
 }))(CircularProgress);
 
 function HomeContainer() {
-  const { oktaAuth, authState } = useOktaAuth();
+  // const { oktaAuth, authState } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
   // eslint-disable-next-line
-  const [memoOktaAuth] = useMemo(() => [oktaAuth], []);
+  // const [memoOktaAuth] = useMemo(() => [oktaAuth], []);
 
-  useEffect(() => {
-    let isSubscribed = true;
+  // useEffect(() => {
+  //   let isSubscribed = true;
 
-    memoOktaAuth
-      .getUser()
-      .then(info => {
-        // if user is authenticated we can use the oktaAuth to snag some user info.
-        // isSubscribed is a boolean toggle that we're using to clean up our useEffect.
-        if (isSubscribed) {
-          setUserInfo(info);
-        }
-      })
-      .catch(err => {
-        isSubscribed = false;
-        return setUserInfo(null);
-      });
-    return () => (isSubscribed = false);
-  }, [memoOktaAuth]);
+  //   memoOktaAuth
+  //     .getUser()
+  //     .then(info => {
+  //       // if user is authenticated we can use the oktaAuth to snag some user info.
+  //       // isSubscribed is a boolean toggle that we're using to clean up our useEffect.
+  //       if (isSubscribed) {
+  //         setUserInfo(info);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       isSubscribed = false;
+  //       return setUserInfo(null);
+  //     });
+  //   return () => (isSubscribed = false);
+  // }, [memoOktaAuth]);
 
   const classes = useStyles();
 
   // JWT access token can be accessed from the authState object if needed
   return (
     <>
-      {authState.isAuthenticated && !userInfo && (
+      {/* {authState.isAuthenticated && !userInfo && (
         <div className={classes.root}>
           <HRFBlueLoader />
         </div>
-      )}
-      {authState.isAuthenticated && userInfo && (
-        <UserContext.Provider value={{ oktaAuth, authState, userInfo }}>
-          <RenderHomePage />
-        </UserContext.Provider>
-      )}
+      )} */}
+      {/* {authState.isAuthenticated && userInfo && ( */}
+      {/* <UserContext.Provider value={{ oktaAuth, authState, userInfo }}> */}
+      <RenderHomePage />
+      {/* </UserContext.Provider> */}
+      {/* )} */}
     </>
   );
 }
