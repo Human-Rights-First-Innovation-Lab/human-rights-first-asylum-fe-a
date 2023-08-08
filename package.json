@@ -7,6 +7,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@appbaseio/reactivesearch": "^3.14.2",
+    "@auth0/auth0-react": "^2.2.0",
     "@casl/ability": "^5.2.2",
     "@casl/react": "^2.2.2",
     "@craco/craco": "^5.9.0",

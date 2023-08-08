@@ -7,10 +7,8 @@ import {
   useHistory,
   Switch,
 } from 'react-router-dom';
-import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
-import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import GlobalStyle from './globalStyles';
-
+import { Auth0Provider } from '@auth0/auth0-react';
 import 'antd/dist/antd.less';
 
 import { NotFoundPage } from './components/pages/NotFound';
@@ -19,18 +17,28 @@ import { ProfileListPage } from './components/pages/ProfileList';
 import { LoginPage } from './components/pages/Login';
 import { HomePage } from './components/pages/Home';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
-import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
 import SignupPage from './components/pages/Login/SignupPage';
+import { ProtectedRoute } from './utils/ProtectedRoute';
 
 // const oktaAuth = new OktaAuth(config);
-
+console.log('window.location.origin', window.location.origin);
 ReactDOM.render(
-  <Router>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </Router>,
+  <Auth0Provider
+    domain="dev-rxalh5fg.us.auth0.com"
+    clientId="DeVTdVBLRFdmyJzeQRWPST70THLlx0V0"
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+    scope="email"
+    responseType="token id_token"
+  >
+    <Router>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Router>
+  </Auth0Provider>,
   document.getElementById('root')
 );
 
@@ -50,39 +58,32 @@ function App() {
   };
 
   return (
-    // <Security
-    //   oktaAuth={oktaAuth}
-    //   restoreOriginalUri={restoreOriginalUri}
-    //   onAuthRequired={authHandler}
-    // >
     <>
       <GlobalStyle />
       <Switch>
         <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage} />
-        <Route path="/implicit/callback" component={LoginCallback} />
-        {/* any of the routes you need secured should be registered as SecureRoutes */}
-        <Route
+        <ProtectedRoute
+          exact
           path="/"
-          // exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          component={HomePage}
+          LoadingComponent={LoadingComponent}
         />
-        <Route
+        <ProtectedRoute
           path="/cases"
-          // exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          component={HomePage}
+          LoadingComponent={LoadingComponent}
         />
-        <Route
+        <ProtectedRoute
           path="/judges"
-          // exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          component={HomePage}
+          LoadingComponent={LoadingComponent}
         />
-        <Route path="/example-list" component={ExampleListPage} />
-        <Route path="/profile-list" component={ProfileListPage} />
-        <Route path="/datavis" component={ExampleDataViz} />
+        <ProtectedRoute path="/example-list" component={ExampleListPage} />
+        <ProtectedRoute path="/profile-list" component={ProfileListPage} />
+        <ProtectedRoute path="/datavis" component={ExampleDataViz} />
         <Route component={NotFoundPage} />
       </Switch>
     </>
-    // </Security>
   );
 }

@@ -7,6 +7,7 @@ import Icon from '@ant-design/icons';
 import Profile from '../../../styles/icons/profile.svg';
 import HRFLogo from '../../../styles/hrf-logo-white.png';
 import Notifications from './Notifications';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const MOCK_NOTIFICATIONS = [
   {
@@ -27,12 +28,12 @@ const MOCK_NOTIFICATIONS = [
 ];
 
 export default function MainHeader(props) {
-  const { logout, getPendingCases } = props;
+  const { getPendingCases } = props;
   const history = useHistory();
-
+  const { logout } = useAuth0();
   const onClick = ({ key }) => {
     if (key === '/logout') {
-      logout();
+      logout({ logoutParams: { returnTo: window.location.origin } });
     } else {
       history.push(`${key}`);
     }

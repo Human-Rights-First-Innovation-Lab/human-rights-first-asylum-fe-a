@@ -4,6 +4,7 @@ import { UserContext } from '../../../context/UserContext';
 import RenderHomePage from './RenderHomePage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,8 +31,16 @@ const HRFBlueLoader = withStyles(() => ({
 }))(CircularProgress);
 
 function HomeContainer() {
+  console.log('HomeContainer.js: HomeContainer()');
   // const { oktaAuth, authState } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
+  const [token, setToken] = useState(null);
+  const {
+    isAuthenticated,
+    user,
+    isLoading,
+    getAccessTokenSilently,
+  } = useAuth0();
   // eslint-disable-next-line
   // const [memoOktaAuth] = useMemo(() => [oktaAuth], []);
 
@@ -53,22 +62,46 @@ function HomeContainer() {
   //     });
   //   return () => (isSubscribed = false);
   // }, [memoOktaAuth]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      // You may want to retrieve additional user info here
+      setUserInfo(user);
+      console.log('user', user);
+      // Example of how to get an access token if needed
+      getAccessTokenSilently().then(token => {
+        setToken(token);
+        console.log(token);
+      });
+    }
+  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   const classes = useStyles();
 
   // JWT access token can be accessed from the authState object if needed
   return (
+    // <>
+    //   {/* {authState.isAuthenticated && !userInfo && (
+    //     <div className={classes.root}>
+    //       <HRFBlueLoader />
+    //     </div>
+    //   )} */}
+    //   {/* {authState.isAuthenticated && userInfo && ( */}
+    //   {/* <UserContext.Provider value={{ oktaAuth, authState, userInfo }}> */}
+    //   <RenderHomePage />
+    //   {/* </UserContext.Provider> */}
+    //   {/* )} */}
+    // </>
     <>
-      {/* {authState.isAuthenticated && !userInfo && (
+      {isLoading && (
         <div className={classes.root}>
           <HRFBlueLoader />
         </div>
-      )} */}
-      {/* {authState.isAuthenticated && userInfo && ( */}
-      {/* <UserContext.Provider value={{ oktaAuth, authState, userInfo }}> */}
-      <RenderHomePage />
-      {/* </UserContext.Provider> */}
-      {/* )} */}
+      )}
+      {isAuthenticated && userInfo && (
+        <UserContext.Provider value={{ auth0: useAuth0, userInfo, token }}>
+          <RenderHomePage />
+        </UserContext.Provider>
+      )}
     </>
   );
 }

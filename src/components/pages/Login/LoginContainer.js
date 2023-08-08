@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './_LoginContainerStyled.less';
-import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 // Below is the Human Rights logo
 import logo from '../../../styles/hrf-logo.png';
@@ -9,10 +8,7 @@ import blue from '../../../styles/blue.svg';
 import blue1 from '../../../styles/blue1.svg';
 import blue2 from '../../../styles/blue2.svg';
 import liberty from '../../../styles/liberty.png';
-
-import { config } from '../../../utils/oktaConfig';
-
-const { pkce, issuer, clientId, redirectUri, scopes } = config;
+import { useAuth0 } from '@auth0/auth0-react';
 
 // const widget = new OktaSignIn({
 //   baseUrl: issuer ? issuer.split('/oauth2')[0] : '',
@@ -39,6 +35,8 @@ const { pkce, issuer, clientId, redirectUri, scopes } = config;
 // });
 
 const LoginContainer = () => {
+  console.log('LoginContainer.js: LoginContainer()');
+  const { loginWithRedirect } = useAuth0();
   // useEffect(() => {
   //   widget.renderEl(
   //     { el: '#sign-in-widget' },
@@ -80,14 +78,14 @@ const LoginContainer = () => {
           <img src={logo} alt="logo" />
         </div>
         <div className="login-page">
-          <div id="sign-in-widget" aria-label="login form" />
+          {/* Replace Okta widget with Auth0 login button */}
+          <button onClick={() => loginWithRedirect()} aria-label="login button">
+            Log In
+          </button>
+
           <p className="register">
             Don't have an account?{' '}
-            <Link
-              className="link-styles"
-              to="/signup"
-              // onClick={removeOktaSignIn}
-            >
+            <Link className="link-styles" to="/signup">
               <span>Register here</span>
             </Link>
           </p>

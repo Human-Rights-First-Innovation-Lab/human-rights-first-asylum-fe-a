@@ -84,55 +84,56 @@ function RenderHomePage(props) {
   const user = useContext(UserContext);
   const { GetPendingCases } = props;
 
-  // useEffect(() => {
-  //   axiosWithAuth()
-  //     .get(`/cases`)
-  //     .then(res => {
-  //       setCaseData(
-  //         res.data.map(eachCase => {
-  //           return {
-  //             ...eachCase,
-  //             id: eachCase.case_id,
-  //           };
-  //         })
-  //       );
-  //       setHasUpdated(false);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }, [user.authState.idToken.idToken, hasUpdated]);
+  console.log('render Home pAGE', user);
+  useEffect(() => {
+    axiosWithAuth()
+      .get(`/cases`)
+      .then(res => {
+        setCaseData(
+          res.data.map(eachCase => {
+            return {
+              ...eachCase,
+              id: eachCase.case_id,
+            };
+          })
+        );
+        setHasUpdated(false);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [user.userInfo, hasUpdated]);
 
-  // useEffect(() => {
-  //   trackPromise(
-  //     // Tracks the axios call and implements spinning loader while executing
-  //     axiosWithAuth().get(`/judge`)
-  //   )
-  //     .then(res => {
-  //       setJudgeData(res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }, [user.authState.idToken.idToken]);
+  useEffect(() => {
+    trackPromise(
+      // Tracks the axios call and implements spinning loader while executing
+      axiosWithAuth().get(`/judge`)
+    )
+      .then(res => {
+        setJudgeData(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [user.userInfo]);
 
-  // useEffect(() => {
-  //   trackPromise(axiosWithAuth().get(`/profile/${user.userInfo.sub}`))
-  //     .then(res => {
-  //       window.localStorage.setItem('role_name', res.data.role_name);
-  //       setHrfUserInfo(res.data);
-  //       setSavedCases(res.data.case_bookmarks);
-  //       setSavedJudges(res.data.judge_bookmarks);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }, [
-  //   user.authState.idToken.idToken,
-  //   user.userInfo.sub,
-  //   savedJudges.length,
-  //   savedCases.length,
-  // ]);
+  useEffect(() => {
+    trackPromise(axiosWithAuth().get(`/profile/${user.userInfo.sub}`))
+      .then(res => {
+        window.localStorage.setItem('role_name', res.data.role_name);
+        setHrfUserInfo(res.data);
+        setSavedCases(res.data.case_bookmarks);
+        setSavedJudges(res.data.judge_bookmarks);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [
+    // user.authState.idToken.idToken,
+    user.userInfo,
+    savedJudges.length,
+    savedCases.length,
+  ]);
   const getPendingCases = () => {
     axiosWithAuth()
       .get(`/cases/pending/user/${user.userInfo.sub}`)
@@ -201,7 +202,7 @@ function RenderHomePage(props) {
         <ThemeProvider theme={theme}>
           <SideDrawer
             logout={logout}
-            // userInfo={user.userInfo}
+            userInfo={user.userInfo}
             MyCases={MyCases}
             savedCases={savedCases}
             savedJudges={savedJudges}
@@ -226,23 +227,17 @@ function RenderHomePage(props) {
             <Route exact path="/saved-judges">
               <SavedJudges
                 savedJudges={savedJudges}
-                // userInfo={user.userInfo}
+                userInfo={user.userInfo}
                 deleteSavedJudge={deleteSavedJudge}
               />
             </Route>
             <Route exact path="/judge/:judge_id">
-              <JudgePage
-              // authState={user.authState}
-              />
+              <JudgePage authState={user.authState} />
             </Route>
-            <Route
-              exact
-              path="/case/:id"
-              // authState={user.authState}
-            >
+            <Route exact path="/case/:id" authState={user.authState}>
               <CaseOverview
                 setCasesData={setCaseData}
-                // authState={user.authState}
+                authState={user.authState}
                 casesData={caseData}
               />
             </Route>
@@ -254,9 +249,7 @@ function RenderHomePage(props) {
               <CaseUpdate />
             </Route>
             <Route exact path="/manage-cases">
-              <ManageCases
-              // authState={user.authState}
-              />
+              <ManageCases authState={user.authState} />
             </Route>
             <Route exact path="/account">
               <AccountPage
@@ -265,15 +258,10 @@ function RenderHomePage(props) {
               />
             </Route>
             <Route exact path="/support">
-              <SupportPage
-                // authState={user.authState}
-                userInfo={hrfUserInfo}
-              />
+              <SupportPage authState={user.authState} userInfo={hrfUserInfo} />
             </Route>
             <Route exact path="/manage-users">
-              <ManageUsersPage
-              // authState={user.authState}
-              />
+              <ManageUsersPage authState={user.authState} />
             </Route>
             <Route exact path="/add-faq">
               <AddFaq
@@ -286,9 +274,7 @@ function RenderHomePage(props) {
               />
             </Route>
             <Route exact path="/edit-faq/:faq_id">
-              <EditFaqPage
-              // authState={user.authState}
-              />
+              <EditFaqPage authState={user.authState} />
             </Route>
 
             <Route exact path="/">
@@ -301,10 +287,10 @@ function RenderHomePage(props) {
                 <CaseTable
                   caseData={caseData}
                   setHasUpdated={setHasUpdated}
-                  // userInfo={user.userInfo}
+                  userInfo={user.userInfo}
                   savedCases={savedCases}
                   setSavedCases={setSavedCases}
-                  // authState={user.authState}
+                  authState={user.authState}
                   selectedRows={selectedRows}
                   setSelectedRows={setSelectedRows}
                 />
@@ -316,10 +302,10 @@ function RenderHomePage(props) {
               <>
                 <JudgeTable
                   judgeData={judgeData}
-                  // userInfo={user.userInfo}
+                  userInfo={user.userInfo}
                   savedJudges={savedJudges}
                   setSavedJudges={setSavedJudges}
-                  // authState={user.authState}
+                  authState={user.authState}
                 />
                 <Loader promiseTracker={usePromiseTracker} />
               </>
