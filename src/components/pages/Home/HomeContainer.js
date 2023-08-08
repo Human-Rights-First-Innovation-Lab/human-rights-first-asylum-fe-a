@@ -79,18 +79,6 @@ function HomeContainer() {
 
   // JWT access token can be accessed from the authState object if needed
   return (
-    // <>
-    //   {/* {authState.isAuthenticated && !userInfo && (
-    //     <div className={classes.root}>
-    //       <HRFBlueLoader />
-    //     </div>
-    //   )} */}
-    //   {/* {authState.isAuthenticated && userInfo && ( */}
-    //   {/* <UserContext.Provider value={{ oktaAuth, authState, userInfo }}> */}
-    //   <RenderHomePage />
-    //   {/* </UserContext.Provider> */}
-    //   {/* )} */}
-    // </>
     <>
       {isLoading && (
         <div className={classes.root}>

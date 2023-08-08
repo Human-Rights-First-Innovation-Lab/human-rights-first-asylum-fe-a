@@ -22,7 +22,6 @@ import SignupPage from './components/pages/Login/SignupPage';
 import { ProtectedRoute } from './utils/ProtectedRoute';
 
 // const oktaAuth = new OktaAuth(config);
-console.log('window.location.origin', window.location.origin);
 ReactDOM.render(
   <Auth0Provider
     domain="dev-rxalh5fg.us.auth0.com"

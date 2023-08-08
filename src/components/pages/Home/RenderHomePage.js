@@ -84,7 +84,6 @@ function RenderHomePage(props) {
   const user = useContext(UserContext);
   const { GetPendingCases } = props;
 
-  console.log('render Home pAGE', user);
   useEffect(() => {
     axiosWithAuth()
       .get(`/cases`)
