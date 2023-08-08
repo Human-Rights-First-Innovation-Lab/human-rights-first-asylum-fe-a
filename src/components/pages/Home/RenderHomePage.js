@@ -84,6 +84,8 @@ function RenderHomePage(props) {
   const user = useContext(UserContext);
   const { GetPendingCases } = props;
 
+  console.log('user', user);
+
   useEffect(() => {
     axiosWithAuth()
       .get(`/cases`)
@@ -117,6 +119,7 @@ function RenderHomePage(props) {
   }, [user.userInfo]);
 
   useEffect(() => {
+    console.log('user.userInfo', user);
     trackPromise(axiosWithAuth().get(`/profile/${user.userInfo.sub}`))
       .then(res => {
         window.localStorage.setItem('role_name', res.data.role_name);

@@ -63,7 +63,6 @@ function App() {
         <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage} />
         <ProtectedRoute
-          exact
           path="/"
           component={HomePage}
           LoadingComponent={LoadingComponent}

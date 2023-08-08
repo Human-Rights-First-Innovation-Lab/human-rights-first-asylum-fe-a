@@ -32,6 +32,8 @@ export default function MainHeader(props) {
   const history = useHistory();
   const { logout } = useAuth0();
   const onClick = ({ key }) => {
+    console.log(key);
+
     if (key === '/logout') {
       logout({ logoutParams: { returnTo: window.location.origin } });
     } else {

@@ -15,6 +15,8 @@ const AccountPage = props => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
 
+  console.log('account page');
+
   const onChange = e => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
