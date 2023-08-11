@@ -24,8 +24,8 @@ import { ProtectedRoute } from './utils/ProtectedRoute';
 // const oktaAuth = new OktaAuth(config);
 ReactDOM.render(
   <Auth0Provider
-    domain="dev-rxalh5fg.us.auth0.com"
-    clientId="DeVTdVBLRFdmyJzeQRWPST70THLlx0V0"
+    domain={process.env.REACT_APP_AUTH0_DOMAIN_URL}
+    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
     authorizationParams={{
       redirect_uri: window.location.origin,
     }}
