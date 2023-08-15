@@ -8,6 +8,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons';
 import './_UploadCase.less';
+import { Modal } from 'antd';
 
 // Icons for modal
 import Icon from '@ant-design/icons';
@@ -89,8 +90,9 @@ const HomePageUpload = ({ getPendingCases }) => {
   };
   return (
     <div className="uploadPage">
-      <div
+      <Modal
         title=""
+        visible={isModalVisible} // Add this to control the visibility of the modal
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
@@ -143,7 +145,7 @@ const HomePageUpload = ({ getPendingCases }) => {
             </form>
           </div>
         </div>
-      </div>
+      </Modal>
     </div>
   );
 };

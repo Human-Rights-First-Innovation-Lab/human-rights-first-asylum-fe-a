@@ -82,16 +82,9 @@ function SideDrawer() {
             </SubMenu>
           </>
         ) : null}
-        <Button
-          className="collapseButton"
-          type="primary"
-          onClick={toggleCollapse}
-          shape="round"
-        >
-          {React.createElement(
-            isCollapsed ? ArrowRightOutlined : ArrowLeftOutlined
-          )}
-        </Button>
+        <button className="collapseButton" onClick={toggleCollapse}>
+          {isCollapsed ? <ArrowRightOutlined /> : <ArrowLeftOutlined />}
+        </button>
       </Menu>
     </div>
   );

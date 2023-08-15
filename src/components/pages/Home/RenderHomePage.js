@@ -84,6 +84,8 @@ function RenderHomePage(props) {
   const user = useContext(UserContext);
   const { GetPendingCases } = props;
 
+  console.log('user', user);
+
   useEffect(() => {
     axiosWithAuth()
       .get(`/cases`)
@@ -101,7 +103,7 @@ function RenderHomePage(props) {
       .catch(err => {
         console.log(err);
       });
-  }, [user.authState.idToken.idToken, hasUpdated]);
+  }, [user.userInfo, hasUpdated]);
 
   useEffect(() => {
     trackPromise(
@@ -114,9 +116,10 @@ function RenderHomePage(props) {
       .catch(err => {
         console.log(err);
       });
-  }, [user.authState.idToken.idToken]);
+  }, [user.userInfo]);
 
   useEffect(() => {
+    console.log('user.userInfo', user);
     trackPromise(axiosWithAuth().get(`/profile/${user.userInfo.sub}`))
       .then(res => {
         window.localStorage.setItem('role_name', res.data.role_name);
@@ -128,8 +131,8 @@ function RenderHomePage(props) {
         console.log(err);
       });
   }, [
-    user.authState.idToken.idToken,
-    user.userInfo.sub,
+    // user.authState.idToken.idToken,
+    user.userInfo,
     savedJudges.length,
     savedCases.length,
   ]);
@@ -189,7 +192,7 @@ function RenderHomePage(props) {
 
   const logout = () => {
     window.localStorage.removeItem('role');
-    user.oktaAuth.signOut();
+    // user.oktaAuth.signOut();
   };
 
   const classes = useStyles();
@@ -240,7 +243,11 @@ function RenderHomePage(props) {
                 casesData={caseData}
               />
             </Route>
-            <Route exact path="case/:id/update" authState={user.authState}>
+            <Route
+              exact
+              path="case/:id/update"
+              //  authState={user.authState}
+            >
               <CaseUpdate />
             </Route>
             <Route exact path="/manage-cases">
@@ -259,10 +266,14 @@ function RenderHomePage(props) {
               <ManageUsersPage authState={user.authState} />
             </Route>
             <Route exact path="/add-faq">
-              <AddFaq authState={user.authState} />
+              <AddFaq
+              //  authState={user.authState}
+              />
             </Route>
             <Route exact path="/manage-faq">
-              <ManageFaqPage authState={user.authState} />
+              <ManageFaqPage
+              //  authState={user.authState}
+              />
             </Route>
             <Route exact path="/edit-faq/:faq_id">
               <EditFaqPage authState={user.authState} />

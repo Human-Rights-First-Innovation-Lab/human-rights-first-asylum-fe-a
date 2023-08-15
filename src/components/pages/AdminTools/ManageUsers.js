@@ -281,7 +281,9 @@ const ManageUsersPage = props => {
         </TabPane>
         <TabPane tab="Pending Users" key="2">
           <div className="pending-users-container">
-            <PendingUsers authState={authState} setProfiles={setProfiles} />
+            <PendingUsers
+            //  authState={authState} setProfiles={setProfiles}
+            />
           </div>
         </TabPane>
       </Tabs>

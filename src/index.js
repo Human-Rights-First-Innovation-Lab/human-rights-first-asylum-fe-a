@@ -7,10 +7,8 @@ import {
   useHistory,
   Switch,
 } from 'react-router-dom';
-import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
-import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import GlobalStyle from './globalStyles';
-
+import { Auth0Provider } from '@auth0/auth0-react';
 import 'antd/dist/antd.less';
 
 import { NotFoundPage } from './components/pages/NotFound';
@@ -19,18 +17,27 @@ import { ProfileListPage } from './components/pages/ProfileList';
 import { LoginPage } from './components/pages/Login';
 import { HomePage } from './components/pages/Home';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
-import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
 import SignupPage from './components/pages/Login/SignupPage';
+import { ProtectedRoute } from './utils/ProtectedRoute';
 
-const oktaAuth = new OktaAuth(config);
-
+// const oktaAuth = new OktaAuth(config);
 ReactDOM.render(
-  <Router>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </Router>,
+  <Auth0Provider
+    domain={process.env.REACT_APP_AUTH0_DOMAIN_URL}
+    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+    scope="email"
+    responseType="token id_token"
+  >
+    <Router>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Router>
+  </Auth0Provider>,
   document.getElementById('root')
 );
 
@@ -39,9 +46,9 @@ function App() {
   // React Router has a nifty useHistory hook we can use at this level to ensure we have security around our routes.
   const history = useHistory();
 
-  const restoreOriginalUri = async (_oktaAuth, originalUri) => {
-    history.replace(toRelativeUrl(originalUri, window.location.origin));
-  };
+  // const restoreOriginalUri = async (_oktaAuth, originalUri) => {
+  //   history.replace(toRelativeUrl(originalUri, window.location.origin));
+  // };
 
   const authHandler = () => {
     // We pass this to our <Security /> component that wraps our routes.
@@ -50,37 +57,31 @@ function App() {
   };
 
   return (
-    <Security
-      oktaAuth={oktaAuth}
-      restoreOriginalUri={restoreOriginalUri}
-      onAuthRequired={authHandler}
-    >
+    <>
       <GlobalStyle />
       <Switch>
         <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage} />
-        <Route path="/implicit/callback" component={LoginCallback} />
-        {/* any of the routes you need secured should be registered as SecureRoutes */}
-        <SecureRoute
+        <ProtectedRoute
           path="/"
-          // exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          component={HomePage}
+          LoadingComponent={LoadingComponent}
         />
-        <SecureRoute
+        <ProtectedRoute
           path="/cases"
-          // exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          component={HomePage}
+          LoadingComponent={LoadingComponent}
         />
-        <SecureRoute
+        <ProtectedRoute
           path="/judges"
-          // exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          component={HomePage}
+          LoadingComponent={LoadingComponent}
         />
-        <SecureRoute path="/example-list" component={ExampleListPage} />
-        <SecureRoute path="/profile-list" component={ProfileListPage} />
-        <SecureRoute path="/datavis" component={ExampleDataViz} />
+        <ProtectedRoute path="/example-list" component={ExampleListPage} />
+        <ProtectedRoute path="/profile-list" component={ProfileListPage} />
+        <ProtectedRoute path="/datavis" component={ExampleDataViz} />
         <Route component={NotFoundPage} />
       </Switch>
-    </Security>
+    </>
   );
 }
